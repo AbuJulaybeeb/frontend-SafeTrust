@@ -1,0 +1,130 @@
+/* ─── Scroball Custom Scrollbar ────────────────────────────
+SafeTrust brand scrollbar for the dashboard sidebar.
+Replaces the default browser scrollbar with an ultra-thin wire
+track and diamond-shaped SVG thumb (the "Scroball").
+
+Browser support:
+- Chrome/Edge/Safari: ::-webkit-scrollbar pseudo-elements
+- Firefox: scrollbar-width + scrollbar-color (thin only, no custom thumb shape in Firefox)
+──────────────────────────────────────────────────────────── */
+
+/* ── Base container ── */
+.scrollbar-scroball {
+  /* Firefox — thin scrollbar fallback (no diamond thumb) */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 200ms ease;
+}
+
+.scrollbar-scroball:hover {
+  scrollbar-color: rgba(100, 116, 139, 0.4) transparent;
+}
+
+/* ── WebKit track (Chrome, Edge, Safari) ── */
+.scrollbar-scroball::-webkit-scrollbar {
+  width: 16px; /* outer container — allows room for diamond */
+  background: transparent;
+}
+
+/* Track line — the "wire" */
+.scrollbar-scroball::-webkit-scrollbar-track {
+  background: transparent;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  background-clip: padding-box;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+/* ── WebKit thumb ── */
+/* Diamond thumb — light mode */
+.scrollbar-scroball::-webkit-scrollbar-thumb {
+  /* Diamond shape via clip-path */
+  background-color: #1e293b; /* slate-800 */
+  border-radius: 0;
+  /* Clip to diamond using clip-path on the thumb element.
+  The thumb itself is 16px wide; clip to centered 12×12 diamond rotated 45°. */
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  /* Wire on either side of the diamond:
+  Use box-shadow to simulate the wire track lines above and below the thumb */
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  background-clip: padding-box;
+  /* Transition for hover reveal */
+  opacity: 0;
+  transition:
+    opacity 200ms ease,
+    background-color 200ms ease;
+}
+
+/* Reveal thumb on container hover */
+.scrollbar-scroball:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+/* ── Wire track line (pseudo-element on the container) ──
+The actual "wire" effect is achieved by a 1px pseudo-
+element inside the scroball container. */
+.scrollbar-scroball {
+  position: relative;
+}
+
+.scrollbar-scroball::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  right: 7px; /* center of 16px scrollbar container */
+  width: 1px;
+  background-color: rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+  transition:
+    background-color 200ms ease,
+    width 200ms ease;
+  border-radius: 1px;
+}
+
+.scrollbar-scroball:hover::after {
+  background-color: rgba(0, 0, 0, 0.18);
+  width: 2px;
+  right: 6.5px;
+}
+
+/* ── Ball endpoints ──
+Top and bottom "balls" at track endpoints.
+Simulated via ::-webkit-scrollbar-button */
+.scrollbar-scroball::-webkit-scrollbar-button {
+  height: 6px;
+  background: transparent;
+  display: block;
+}
+
+/* ── Dark mode overrides ── */
+.dark .scrollbar-scroball {
+  scrollbar-color: transparent transparent;
+}
+
+.dark .scrollbar-scroball:hover {
+  scrollbar-color: rgba(226, 232, 240, 0.3) transparent;
+}
+
+.dark .scrollbar-scroball::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0; /* slate-200 */
+}
+
+.dark .scrollbar-scroball::after {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark .scrollbar-scroball:hover::after {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Active thumb state (while dragging) ── */
+.scrollbar-scroball::-webkit-scrollbar-thumb:active {
+  background-color: #0f172a; /* slate-900 — darker on drag */
+}
+
+.dark .scrollbar-scroball::-webkit-scrollbar-thumb:active {
+  background-color: #f8fafc; /* slate-50 — brighter on drag */
+}
