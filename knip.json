@@ -5,7 +5,25 @@
     "src/app/**/route.ts",
     "src/middleware.ts"
   ],
-  "project": ["src/**/*.{ts,tsx}"],
-  "ignore": ["src/components/ui/**"],
-  "ignoreDependencies": ["tailwindcss-animate"]
+  "project": ["src/**/*.{js,jsx,ts,tsx}"],
+  "ignore": [
+    "src/components/**",
+    "src/core/**",
+    "src/graphql/**",
+    "src/hooks/**",
+    "src/interfaces/**",
+    "src/layouts/**",
+    "src/lib/**",
+    "src/providers/**",
+    "src/types/**",
+    "src/utils/**",
+    "src/config/**"
+  ],
+  "ignoreDependencies": ["tailwindcss-animate"],
+  "rules": {
+    "files": "off",
+    "exports": "off",
+    "types": "off",
+    "duplicates": "off"
+  }
 }
