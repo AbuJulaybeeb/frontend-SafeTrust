@@ -26,6 +26,7 @@ import { Separator } from "@/components/ui/separator";
 // Trustless Work blocks
 import { InitializeEscrowForm as SingleReleaseForm } from "@/components/tw-blocks/escrows/single-release/initialize-escrow/form/InitializeEscrow";
 import { InitializeEscrowForm as MultiReleaseForm } from "@/components/tw-blocks/escrows/multi-release/initialize-escrow/form/InitializeEscrow";
+import { useEscrowContext } from "@/components/tw-blocks/providers/EscrowProvider";
 
 // Icons
 import {
@@ -314,13 +315,23 @@ export function EscrowCreationForm({
   bookingData,
   hotelData,
   escrowType,
-  onEscrowCreated: _onEscrowCreated,
+  onEscrowCreated,
   onCancel,
   className = "",
 }: EscrowCreationFormProps) {
-  void _onEscrowCreated;
   const { address: walletAddress, connectWallet } = useWallet();
   const [showForm, setShowForm] = useState(false);
+  const { selectedEscrow } = useEscrowContext();
+
+  React.useEffect(() => {
+    if (selectedEscrow && selectedEscrow.contractId && onEscrowCreated) {
+      onEscrowCreated({
+        contractId: selectedEscrow.contractId,
+        status: "created",
+        unsignedXDR: (selectedEscrow as { unsignedXDR?: string }).unsignedXDR,
+      });
+    }
+  }, [selectedEscrow, onEscrowCreated]);
 
   const {
     milestones,

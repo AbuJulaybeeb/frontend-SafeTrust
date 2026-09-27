@@ -177,7 +177,8 @@ export const useMetaMaskWallet = () => {
   };
 
   useEffect(() => {
-    if (!window.ethereum) return;
+    const ethereum = window.ethereum;
+    if (!ethereum || typeof ethereum.on !== 'function' || typeof ethereum.removeListener !== 'function') return;
 
     const handleAccountsChanged = (accounts: string[]) => {
       if (accounts.length === 0) {
@@ -193,12 +194,12 @@ export const useMetaMaskWallet = () => {
       }
     };
 
-    window.ethereum.on('accountsChanged', handleAccountsChanged);
-    window.ethereum.on('chainChanged', handleChainChanged);
+    ethereum.on('accountsChanged', handleAccountsChanged);
+    ethereum.on('chainChanged', handleChainChanged);
 
     return () => {
-      window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
-      window.ethereum?.removeListener('chainChanged', handleChainChanged);
+      ethereum.removeListener?.('accountsChanged', handleAccountsChanged);
+      ethereum.removeListener?.('chainChanged', handleChainChanged);
     };
   }, [walletState.isConnected]);
 

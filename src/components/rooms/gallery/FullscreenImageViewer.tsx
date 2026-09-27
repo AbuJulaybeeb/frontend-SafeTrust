@@ -28,20 +28,16 @@ export default function FullscreenImageViewer({
   const imageRef = useRef<HTMLDivElement>(null);
 
   const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => {
-      const nextIndex = (prev - 1 + images.length) % images.length;
-      onChangeImage(nextIndex);
-      return nextIndex;
-    });
-  }, [images.length, onChangeImage]);
+    const nextIndex = (currentIndex - 1 + images.length) % images.length;
+    setCurrentIndex(nextIndex);
+    onChangeImage(nextIndex);
+  }, [currentIndex, images.length, onChangeImage]);
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => {
-      const nextIndex = (prev + 1) % images.length;
-      onChangeImage(nextIndex);
-      return nextIndex;
-    });
-  }, [images.length, onChangeImage]);
+    const nextIndex = (currentIndex + 1) % images.length;
+    setCurrentIndex(nextIndex);
+    onChangeImage(nextIndex);
+  }, [currentIndex, images.length, onChangeImage]);
 
   const zoomIn = useCallback(() => {
     setScale((prev) => Math.min(prev + 0.5, 3));
