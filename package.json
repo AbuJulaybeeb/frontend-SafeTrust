@@ -114,6 +114,11 @@
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+<<<<<<< HEAD
+=======
+    "jest-junit": "^16.0.0",
+    "knip": "^5.45.0",
+>>>>>>> d198f21 (ci(tooling): add CI quality gate workflow and local check script (#495))
     "postcss": "^8",
     "prettier": "^3.5.3",
     "tailwindcss": "^3.4.1",
