@@ -51,7 +51,6 @@ function ImageSlot({
           large ? 'min-h-[240px]' : 'min-h-[74px]'
         )}
       >
-        {previewUrl ? (
           <Image
             src={previewUrl}
             alt={label}

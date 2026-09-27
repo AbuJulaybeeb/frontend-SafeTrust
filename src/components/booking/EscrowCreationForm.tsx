@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { useWallet } from "@/components/auth/wallet/hooks/wallet.hook";
 import { useBookingEscrow } from "@/hooks/useBookingEscrow";
 import {
@@ -315,18 +314,16 @@ export function EscrowCreationForm({
   bookingData,
   hotelData,
   escrowType,
-  onEscrowCreated,
+  onEscrowCreated: _onEscrowCreated,
   onCancel,
   className = "",
 }: EscrowCreationFormProps) {
-  const router = useRouter();
+  void _onEscrowCreated;
   const { address: walletAddress, connectWallet } = useWallet();
   const [showForm, setShowForm] = useState(false);
 
   const {
-    escrowFormData,
     milestones,
-    totalAmount,
     isValid,
     validationErrors,
   } = useBookingEscrow({
@@ -337,18 +334,6 @@ export function EscrowCreationForm({
 
   // Determine if wallet is connected
   const isWalletConnected = useMemo(() => Boolean(walletAddress), [walletAddress]);
-
-  // Handle escrow creation success
-  const handleSuccess = (data: unknown) => {
-    console.log("✅ Escrow created successfully:", data);
-    onEscrowCreated(data as EscrowResponse);
-  };
-
-  // Handle escrow creation error
-  const handleError = (error: unknown) => {
-    console.error("❌ Escrow creation failed:", error);
-    // Error handling is done by the form component
-  };
 
   // Wallet not connected state
   if (!isWalletConnected) {

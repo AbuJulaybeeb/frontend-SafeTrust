@@ -87,7 +87,6 @@ export const MainWalletSelectionModal: React.FC<
                 >
                   <CardContent className="!p-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
                         <Image
                           src={option.icon}
                           alt={option.name}

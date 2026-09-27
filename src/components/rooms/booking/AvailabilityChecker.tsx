@@ -54,7 +54,7 @@ const AvailabilityChecker: React.FC<AvailabilityCheckerProps> = ({
       
       setAvailability(newAvailability)
       onAvailabilityChange?.(isAvailable)
-    } catch (error) {
+    } catch {
       setAvailability({
         isAvailable: false,
         isLoading: false,
