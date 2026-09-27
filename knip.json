@@ -1,9 +1,11 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
-    "src/app/**/{page,layout,route,not-found,error,loading}.tsx",
-    "src/app/**/route.ts",
-    "src/middleware.ts"
+    "src/app/**/{page,layout,loading,error,not-found,global-error,route,template,default}.{js,jsx,ts,tsx}",
+    "src/middleware.{js,ts}",
+    "next.config.{js,ts,mjs}",
+    "codegen.ts",
+    "postcss.config.mjs"
   ],
   "project": ["src/**/*.{js,jsx,ts,tsx}"],
   "ignore": [
@@ -19,11 +21,24 @@
     "src/utils/**",
     "src/config/**"
   ],
-  "ignoreDependencies": ["tailwindcss-animate"],
+  "ignoreDependencies": [
+    "@graphql-codegen/schema-ast",
+    "postcss-load-config",
+    "tailwindcss-animate"
+  ],
+  "ignoreBinaries": [
+    "docker-compose"
+  ],
   "rules": {
     "files": "off",
+    "dependencies": "off",
+    "devDependencies": "off",
+    "unlisted": "off",
+    "binaries": "off",
+    "unresolved": "off",
     "exports": "off",
     "types": "off",
     "duplicates": "off"
   }
 }
+

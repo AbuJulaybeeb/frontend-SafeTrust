@@ -322,9 +322,15 @@ export function EscrowCreationForm({
   const { address: walletAddress, connectWallet } = useWallet();
   const [showForm, setShowForm] = useState(false);
   const { selectedEscrow } = useEscrowContext();
+  const initialContractIdRef = React.useRef(selectedEscrow?.contractId);
 
   React.useEffect(() => {
-    if (selectedEscrow && selectedEscrow.contractId && onEscrowCreated) {
+    if (
+      selectedEscrow &&
+      selectedEscrow.contractId &&
+      selectedEscrow.contractId !== initialContractIdRef.current &&
+      onEscrowCreated
+    ) {
       onEscrowCreated({
         contractId: selectedEscrow.contractId,
         status: "created",
