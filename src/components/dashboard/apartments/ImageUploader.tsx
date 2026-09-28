@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import { Plus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -51,10 +52,12 @@ function ImageSlot({
         )}
       >
         {previewUrl ? (
-          <img
+          <Image
             src={previewUrl}
             alt={label}
-            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            unoptimized
+            className="object-cover"
           />
         ) : (
           <Plus className={cn(large ? 'h-8 w-8' : 'h-6 w-6')} aria-hidden="true" />

@@ -109,7 +109,6 @@ export default function RoomPage() {
       router.push(`/hotels/${hotelId}/book?bookingId=${bookingData.bookingId}`);
     }
   };
-
   return (
     <div className="container mx-auto pb-8 max-w-7xl min-h-screen bg-background">
       {/* Navigation/Page Header */}
