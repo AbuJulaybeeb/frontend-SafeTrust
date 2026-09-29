@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "stellar.creit.tech" },
+      { protocol: "https", hostname: "api.qrserver.com" },
+    ],
+  },
   async redirects() {
     return [
       { source: "/dashboard/hotel", destination: "/hotels", permanent: true },

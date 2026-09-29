@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { ethers } from "ethers";
 import { Button } from "@/components/ui/button";
 import { 
@@ -106,10 +107,13 @@ export const MetaMaskWalletModal: React.FC<MetaMaskWalletModalProps> = ({
             /* MetaMask Not Installed */
             <div className="space-y-6 text-center">
               <div className="flex justify-center">
-                <img 
-                  src="/img/wallet/metamask.png" 
+                <Image 
+                  src="https://stellar.creit.tech/wallet-icons/default.png" 
                   alt="MetaMask"
-                  className="w-16 h-16 rounded-lg"
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 rounded-lg object-contain"
+                  unoptimized
                 />
               </div>
               
@@ -140,10 +144,13 @@ export const MetaMaskWalletModal: React.FC<MetaMaskWalletModalProps> = ({
             /* MetaMask Installed - Troubleshooting */
             <div className="space-y-6 text-center">
               <div className="flex justify-center">
-                <img 
-                  src="/img/wallet/metamask.png" 
+                <Image 
+                  src="https://stellar.creit.tech/wallet-icons/default.png" 
                   alt="MetaMask"
-                  className="w-16 h-16 rounded-lg"
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 rounded-lg object-contain"
+                  unoptimized
                 />
               </div>
               

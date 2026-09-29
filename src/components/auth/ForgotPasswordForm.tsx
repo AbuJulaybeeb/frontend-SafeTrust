@@ -80,7 +80,7 @@ export default function ForgotPasswordForm() {
           Forgot password?
         </h1>
         <p className="text-sm text-gray-500 transition-colors duration-300 dark:text-gray-400">
-          No worries, we'll send you a temporary password
+          No worries, we&rsquo;ll send you a temporary password
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

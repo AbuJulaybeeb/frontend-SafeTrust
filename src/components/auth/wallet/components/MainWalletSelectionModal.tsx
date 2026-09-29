@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { X } from "lucide-react";
@@ -24,13 +25,13 @@ const walletOptions = [
   {
     id: "metamask" as WalletType,
     name: "MetaMask",
-    icon: "/img/wallet/metamask.png",
+    icon: "https://stellar.creit.tech/wallet-icons/default.png",
     description: "Browser extension wallet",
   },
   {
     id: "walletconnect" as WalletType,
     name: "WalletConnect",
-    icon: "/img/wallet/walletconnect.png",
+    icon: "https://stellar.creit.tech/wallet-icons/default.png",
     description: "300+ mobile & desktop wallets",
   },
 ];
@@ -87,13 +88,13 @@ export const MainWalletSelectionModal: React.FC<
                   <CardContent className="!p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <img
+                        <Image
                           src={option.icon}
                           alt={option.name}
-                          className="w-8 h-8 rounded-lg"
-                          onError={(e) => {
-                            e.currentTarget.src = "/img/logo.png";
-                          }}
+                          width={32}
+                          height={32}
+                          className="w-8 h-8 rounded-lg object-contain"
+                          unoptimized
                         />
                         <div>
                           <h3 className="font-semibold">{option.name}</h3>

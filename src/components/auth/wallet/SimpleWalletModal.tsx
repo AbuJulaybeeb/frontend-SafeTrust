@@ -239,7 +239,7 @@ export default function SimpleWalletModal({
 
         <div className="mt-4 text-center">
           <p className="text-xs text-gray-500">
-            Use "Connect Stellar Wallet" for Stellar wallets
+            Use &ldquo;Connect Stellar Wallet&rdquo; for Stellar wallets
           </p>
         </div>
       </div>

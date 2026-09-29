@@ -278,7 +278,7 @@ const MobileBookingCard = ({
             Save & Book Later
           </Button>
           <p className="text-center text-sm text-muted-foreground">
-            You won't be charged yet
+            You won&rsquo;t be charged yet
           </p>
         </div>
       </div>
