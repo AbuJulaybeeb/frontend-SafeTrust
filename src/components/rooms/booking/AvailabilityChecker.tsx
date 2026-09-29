@@ -107,4 +107,5 @@ const AvailabilityChecker: React.FC<AvailabilityCheckerProps> = ({
 }
 
 export { AvailabilityChecker }
+export default AvailabilityChecker
 export type { AvailabilityCheckerProps, AvailabilityStatus }

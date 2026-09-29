@@ -288,4 +288,5 @@ const CustomDateRangePicker = React.forwardRef<
 CustomDateRangePicker.displayName = "CustomDateRangePicker";
 
 export { CustomDateRangePicker };
+export default CustomDateRangePicker;
 export type { CustomDateRangePickerProps };
