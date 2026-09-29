@@ -159,7 +159,7 @@ package manager; the repository pins its expected Node and npm versions in
 2. No `console.log` in production paths, no unexplained `any` or `@ts-ignore`.
 3. Link the issue your PR closes.
 
-Run `npm run check` before opening a PR; CI runs the same steps.
+Run `npm run check` before opening a PR. CI also enforces zero ESLint warnings.
 
 **Branch naming:** `feat/<issue-number>-short-description` · `fix/<issue-number>-short-description`
 

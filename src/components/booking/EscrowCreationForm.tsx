@@ -321,23 +321,31 @@ export function EscrowCreationForm({
 }: EscrowCreationFormProps) {
   const { address: walletAddress, connectWallet } = useWallet();
   const [showForm, setShowForm] = useState(false);
-  const { selectedEscrow } = useEscrowContext();
-  const initialContractIdRef = React.useRef(selectedEscrow?.contractId);
+  const { selectedEscrow, clearEscrow } = useEscrowContext();
+  const isMountedRef = React.useRef(false);
+  const lastCreatedIdRef = React.useRef<string | null>(null);
+
+  React.useEffect(() => {
+    clearEscrow();
+    isMountedRef.current = true;
+  }, [clearEscrow]);
 
   React.useEffect(() => {
     if (
-      selectedEscrow &&
-      selectedEscrow.contractId &&
-      selectedEscrow.contractId !== initialContractIdRef.current &&
+      showForm &&
+      isMountedRef.current &&
+      selectedEscrow?.contractId &&
+      selectedEscrow.contractId !== lastCreatedIdRef.current &&
       onEscrowCreated
     ) {
+      lastCreatedIdRef.current = selectedEscrow.contractId;
       onEscrowCreated({
         contractId: selectedEscrow.contractId,
         status: "created",
         unsignedXDR: (selectedEscrow as { unsignedXDR?: string }).unsignedXDR,
       });
     }
-  }, [selectedEscrow, onEscrowCreated]);
+  }, [selectedEscrow, showForm, onEscrowCreated]);
 
   const {
     milestones,
