@@ -1,6 +1,6 @@
 "use client";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { useState } from "react";
 import {
@@ -101,10 +101,7 @@ export default function RoomPage() {
       router.push(`/hotels/${hotelId}/book?bookingId=${bookingData.bookingId}`);
     }
   };
-<<<<<<< HEAD
-=======
 
->>>>>>> 19f02f7 (fix(lint): resolve TypeScript any types and ESLint warnings for CI quality gate)
   return (
     <div className="container mx-auto pb-8 max-w-7xl min-h-screen bg-background">
       {/* Navigation/Page Header */}

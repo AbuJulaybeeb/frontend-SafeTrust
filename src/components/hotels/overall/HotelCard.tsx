@@ -13,6 +13,7 @@ interface HotelCardProps {
 
 export default function HotelCard({ hotel, onToggleFavorite }: HotelCardProps) {
   return (
+    <Card className="overflow-hidden">
       <div className="relative h-[150px] w-full">
         <Image
           src={hotel.image || "/img/placeholder.svg"}
