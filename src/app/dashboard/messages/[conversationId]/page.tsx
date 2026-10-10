@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useConversation } from "@/hooks/useConversation";
 import { DemoBadge } from "@/components/ui/demo-badge";
-import { EmptyState } from "@/components/ui/EmptyState";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const ConversationThread = dynamic(
   () =>
@@ -20,15 +20,13 @@ const ConversationThread = dynamic(
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={`flex gap-3 ${i % 2 === 0 ? "" : "justify-end"}`}
+            className={lex gap-3 }
           >
             {i % 2 === 0 && (
               <div className="h-8 w-8 rounded-full bg-muted animate-pulse shrink-0" />
             )}
             <div
-              className={`h-12 rounded-xl bg-muted animate-pulse ${
-                i % 2 === 0 ? "w-48" : "w-40"
-              }`}
+              className={h-12 rounded-xl bg-muted animate-pulse }
             />
           </div>
         ))}
@@ -53,7 +51,7 @@ export default function ConversationPage({
     appendMessage,
   } = useConversation(conversationId);
 
-  // Unknown conversation id → 404 (does not reveal whether the id exists for
+  // Unknown conversation id -> 404 (does not reveal whether the id exists for
   // a different user, as required by the acceptance criteria).
   if (!conversation) {
     notFound();
