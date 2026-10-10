@@ -15,4 +15,4 @@ export type {
   ApartmentOwner,
   HotelSearchResult,
 } from "@/types/hotel";
-export type * from "./types";
+export type * from "@/types/hotel-booking";
