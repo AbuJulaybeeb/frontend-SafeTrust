@@ -11,7 +11,7 @@ export class EscrowRepository {
     if (IS_DEMO_MODE) {
       return { id, amount: '250.00', status: 'RELEASED' };
     }
-    const res = await fetch(/api/escrows/);
+    const res = await fetch(`/api/escrows/${id}`);
     if (!res.ok) throw new Error('Failed to fetch escrow');
     return res.json();
   }
