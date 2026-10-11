@@ -20,13 +20,13 @@ const ConversationThread = dynamic(
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={lex gap-3 }
+            className="flex gap-3"
           >
             {i % 2 === 0 && (
               <div className="h-8 w-8 rounded-full bg-muted animate-pulse shrink-0" />
             )}
             <div
-              className={h-12 rounded-xl bg-muted animate-pulse }
+              className="h-12 rounded-xl bg-muted animate-pulse"
             />
           </div>
         ))}
