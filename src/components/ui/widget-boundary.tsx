@@ -27,7 +27,7 @@ export class WidgetBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error(WidgetBoundary [] error:, error, errorInfo);
+    console.error(`WidgetBoundary [${this.props.name}] error:`, error, errorInfo);
     if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
       Sentry.captureException(error, {
         tags: {
