@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useConversations } from "@/hooks/useConversations";
 import { DemoBadge } from "@/components/ui/demo-badge";
-import { EmptyState } from "@/components/ui/EmptyState";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const ConversationList = dynamic(
   () =>
