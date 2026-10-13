@@ -104,3 +104,11 @@ html [data-sonner-toaster][data-sonner-theme="light"] {
   --warning-text: hsl(31, 92%, 28%);
   --info-text: hsl(210, 92%, 35%);
 }
+@layer utilities {
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

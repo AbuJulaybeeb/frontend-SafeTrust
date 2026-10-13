@@ -7,8 +7,14 @@ import {
   BedroomTabs,
   FilterSidebar,
   HotelHeader,
+  DestinationCarousel,
+  CategoryFilterRow,
 } from "@/components/listings";
-import { APARTMENT_LISTINGS } from "@/lib/mockData/apartmentListings";
+import {
+  APARTMENT_CATEGORIES,
+  APARTMENT_LISTINGS,
+} from "@/lib/mockData/apartmentListings";
+import { STUB_DESTINATIONS } from "@/lib/mockData/destinations";
 import { NearMeButton } from "@/components/listings/NearMeButton";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { distanceKm, sortByDistance } from "@/lib/geo";
@@ -52,6 +58,18 @@ function RentPageContent() {
   const normalizedQuery = normalizeSearchText(query);
   const geo = useGeolocation();
   const { filters, setFilters, reset, activeCount } = useRentFilters();
+  const destinationCounts = useMemo(
+    () =>
+      APARTMENT_LISTINGS.reduce<Record<string, number>>((counts, listing) => {
+        counts[listing.location] = (counts[listing.location] ?? 0) + 1;
+        return counts;
+      }, {}),
+    [],
+  );
+  const selectedDestinationId =
+    STUB_DESTINATIONS.find(
+      (destination) => destination.location === filters.location,
+    )?.id ?? null;
   const previousAutoSortPosition = useRef(geo.position);
 
   const isOutsideCostaRica = useMemo(() => {
@@ -314,6 +332,29 @@ function RentPageContent() {
               </div>
             </div>
           </RentReveal>
+
+          <div className="mt-6 space-y-4">
+            <DestinationCarousel
+              destinations={STUB_DESTINATIONS}
+              selectedId={selectedDestinationId}
+              counts={destinationCounts}
+              onSelectDestination={(destination) =>
+                setFilters({ location: destination?.location ?? null })
+              }
+            />
+            <CategoryFilterRow
+              categories={APARTMENT_CATEGORIES}
+              value={filters.categories}
+              onChange={(categories) => setFilters({ categories })}
+              onToggleCategory={(category) =>
+                setFilters((current) => ({
+                  categories: current.categories.includes(category)
+                    ? current.categories.filter((item) => item !== category)
+                    : [...current.categories, category],
+                }))
+              }
+            />
+          </div>
 
           <RentReveal delay={0.05} className="mt-5">
             <BedroomTabs

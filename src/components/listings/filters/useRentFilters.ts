@@ -90,21 +90,31 @@ export function useRentFilters() {
   const pendingFilters = useRef<{
     params: string;
     filters: RentFilters;
+    requests: Set<string>;
   } | null>(null);
 
   useEffect(() => {
-    if (pendingFilters.current?.params !== paramsString) {
+    const pending = pendingFilters.current;
+    // Keep the latest intent while earlier router transitions commit. A
+    // different URL (e.g. browser Back) restores the URL as the source of truth.
+    if (
+      pending &&
+      (pending.params === paramsString || !pending.requests.has(paramsString))
+    ) {
       pendingFilters.current = null;
     }
   }, [paramsString]);
 
   const setFilters = useCallback(
-    (patch: Partial<RentFilters>) => {
-      const baseFilters =
-        pendingFilters.current?.params === paramsString
-          ? pendingFilters.current.filters
-          : filters;
-      const next = { ...baseFilters, ...patch };
+    (
+      patch:
+        Partial<RentFilters> | ((current: RentFilters) => Partial<RentFilters>),
+    ) => {
+      const baseFilters = pendingFilters.current?.filters ?? filters;
+      const next = {
+        ...baseFilters,
+        ...(typeof patch === "function" ? patch(baseFilters) : patch),
+      };
       const query = new URLSearchParams();
       if (next.categories.length) {
         query.set("categories", next.categories.join(","));
@@ -119,19 +129,23 @@ export function useRentFilters() {
       }
       if (next.sort !== "relevance") query.set("sort", next.sort);
 
-      pendingFilters.current = { params: paramsString, filters: next };
       const queryString = query.toString();
+      const requests = pendingFilters.current?.requests ?? new Set<string>();
+      requests.add(queryString);
+      pendingFilters.current = { params: queryString, filters: next, requests };
       router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
         scroll: false,
       });
     },
-    [filters, paramsString, pathname, router],
+    [filters, pathname, router],
   );
 
   const reset = useCallback(() => {
-    pendingFilters.current = { params: paramsString, filters: DEFAULT_FILTERS };
+    const requests = pendingFilters.current?.requests ?? new Set<string>();
+    requests.add("");
+    pendingFilters.current = { params: "", filters: DEFAULT_FILTERS, requests };
     router.replace(pathname, { scroll: false });
-  }, [paramsString, pathname, router]);
+  }, [pathname, router]);
 
   const activeCount =
     filters.categories.length +

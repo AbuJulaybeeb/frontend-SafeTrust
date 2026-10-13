@@ -41,6 +41,50 @@ describe("useRentFilters", () => {
     );
   });
 
+  it("composes category toggles before their URL transitions finish", () => {
+    const { result } = renderHook(() => useRentFilters());
+    act(() => {
+      result.current.setFilters((current) => ({
+        categories: [...current.categories, "Family"],
+      }));
+      result.current.setFilters((current) => ({
+        categories: [...current.categories, "Students"],
+      }));
+    });
+    expect(mockRouterReplace).toHaveBeenLastCalledWith(
+      "/rent?categories=Family%2CStudents",
+      { scroll: false },
+    );
+  });
+
+  it("keeps the latest toggle intent when an earlier URL commits", () => {
+    const { result, rerender } = renderHook(() => useRentFilters());
+    act(() => {
+      result.current.setFilters({ categories: ["Family"] });
+      result.current.setFilters((current) => ({
+        categories: [...current.categories, "Students"],
+      }));
+    });
+    mockSearchParams = "categories=Family";
+    rerender();
+    act(() =>
+      result.current.setFilters((current) => ({
+        categories: [...current.categories, "Travelers"],
+      })),
+    );
+    expect(mockRouterReplace).toHaveBeenLastCalledWith(
+      "/rent?categories=Family%2CStudents%2CTravelers",
+      { scroll: false },
+    );
+    mockSearchParams = "location=Heredia";
+    rerender();
+    act(() => result.current.setFilters({ bedrooms: "2" }));
+    expect(mockRouterReplace).toHaveBeenLastCalledWith(
+      "/rent?location=Heredia&bedrooms=2",
+      { scroll: false },
+    );
+  });
+
   it("keeps clear-all state for updates before navigation commits", () => {
     mockSearchParams = "location=San%20Jos%C3%A9&categories=Family";
     const { result } = renderHook(() => useRentFilters());

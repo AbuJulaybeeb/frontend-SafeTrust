@@ -128,14 +128,14 @@ function HotelHeaderContent({ showHostSwitch }: HotelHeaderProps) {
   return (
     <header className="border-b border-border bg-background">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-4 px-4 py-5 sm:flex-nowrap sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/" className="flex shrink-0 items-center gap-3">
           <Image src="/img/logo.png" alt="SafeTrust" width={36} height={36} />
           <span className="text-2xl font-semibold text-foreground">
             SafeTrust
           </span>
         </Link>
 
-        <div className="order-3 mx-0 flex w-full items-center rounded-full border border-border bg-muted/60 px-2 py-1.5 sm:order-none sm:mx-auto sm:max-w-md">
+        <div className="order-3 mx-0 flex min-w-0 w-full items-center rounded-full border border-border bg-muted/60 px-2 py-1.5 sm:order-none sm:mx-auto sm:w-auto sm:flex-1 sm:max-w-md">
           <RentDropdown />
           <div className="mx-3 h-6 w-px bg-gray-300 dark:bg-slate-600" />
           <span className="min-w-0 truncate text-sm text-gray-600 dark:text-gray-300">
@@ -148,7 +148,7 @@ function HotelHeaderContent({ showHostSwitch }: HotelHeaderProps) {
           />
         </div>
 
-        <div className="ml-auto flex items-center gap-3 sm:gap-5">
+        <div className="ml-auto flex shrink-0 items-center gap-3 sm:gap-5">
           {showHostSwitch && (
             <Link
               href="/dashboard/escrow-dashboard"

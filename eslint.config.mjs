@@ -217,7 +217,6 @@ const eslintConfig = [
       "src/components/dashboard/guest/GuestDashboard.tsx",
       "src/components/hotels/overall/HotelGrid.tsx",
       "src/components/listings/BedroomTabs.tsx",
-      "src/components/listings/FilterSidebar.tsx",
     ],
     rules: {
       "no-restricted-imports": "off",
