@@ -1,4 +1,4 @@
-import { test, expect, waitForHydration } from "./fixtures";
+import { test, expect, expectPathname, waitForHydration } from "./fixtures";
 import { MOCK_USERS, mockFirebaseAuth } from "./support/mock-auth";
 
 const walletElements = [
@@ -56,9 +56,15 @@ for (const wallet of [
     await page.getByLabel("Email").fill(MOCK_USERS.guest.email);
     await page.getByLabel("Password").fill(MOCK_USERS.guest.password);
     await page.getByRole("button", { name: "Login", exact: true }).click();
-    await expect(page).toHaveURL(/\/dashboard\/escrow-dashboard$/);
+    // Wait for the real redirect: `/login?redirect=/dashboard/escrow-dashboard`
+    // also ends with the target path, and reloading the login page mid-sign-in
+    // aborts the login.
+    await expectPathname(page, "/dashboard/escrow-dashboard");
+    await expect(
+      page.getByRole("heading", { name: "Escrow Dashboard", exact: true }),
+    ).toBeVisible();
     await page.reload();
-    await expect(page).toHaveURL(/\/dashboard\/escrow-dashboard$/);
+    await expectPathname(page, "/dashboard/escrow-dashboard");
     await expect
       .poll(() =>
         page.evaluate(

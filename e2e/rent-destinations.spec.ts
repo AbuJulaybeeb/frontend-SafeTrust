@@ -81,9 +81,19 @@ test("deep-linked destination is visible and scrolling respects reduced motion",
     await image.evaluate((element) => getComputedStyle(element).transform),
   ).toBe("none");
   await page.setViewportSize({ width: 1280, height: 844 });
-  await page
-    .getByRole("button", { name: "All of Costa Rica", exact: true })
-    .click();
+  const all = strip(page).getByRole("button", {
+    name: "All of Costa Rica",
+    exact: true,
+  });
+  await all.click();
+  // Let the selection settle first. Playwright scrolls "All" into view before
+  // clicking, so scrollLeft is already ~0 here; if the URL update lands after
+  // the "scroll right" click, the carousel (correctly) scrolls back to the
+  // newly selected tile and the assertion below would see 0.
+  await expect(all).toHaveAttribute("aria-pressed", "true");
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get("location"))
+    .toBeNull();
   await expect
     .poll(() => strip(page).evaluate((element) => element.scrollLeft))
     .toBeLessThan(5);
@@ -107,17 +117,43 @@ for (const width of [360, 768, 1280]) {
       await expect(page.locator("html")).toHaveClass(new RegExp(theme));
       const buttons = strip(page).getByRole("button");
       await expect(buttons).toHaveCount(8);
-      await expect
-        .poll(() =>
-          strip(page)
-            .locator("img")
-            .evaluateAll((images) =>
-              images.every(
-                (image) => (image as HTMLImageElement).naturalWidth > 0,
+      const images = strip(page).locator("img");
+      await expect(images).toHaveCount(7);
+      // Lazy images outside the strip's viewport need not load until visited.
+      // Scroll only the carousel so the page position remains unchanged.
+      for (let index = 0; index < 7; index++) {
+        await strip(page).evaluate((list, index) => {
+          const image = list.querySelectorAll("img")[index];
+          list.scrollBy({
+            left:
+              image.getBoundingClientRect().left -
+              list.getBoundingClientRect().left -
+              8,
+            behavior: "instant",
+          });
+        }, index);
+        const image = images.nth(index);
+        await expect
+          .poll(
+            () =>
+              image.evaluate(
+                (element) =>
+                  (element as HTMLImageElement).complete &&
+                  (element as HTMLImageElement).naturalWidth > 0,
               ),
-            ),
-        )
-        .toBe(true);
+            {
+              message: `Destination image ${index + 1} loads after scrolling into view`,
+            },
+          )
+          .toBe(true);
+        await expect(image).not.toHaveAttribute("src", /placeholder/);
+      }
+      await strip(page).evaluate((list) =>
+        list.scrollTo({ left: 0, behavior: "instant" }),
+      );
+      await expect
+        .poll(() => strip(page).evaluate((list) => list.scrollLeft))
+        .toBeLessThan(5);
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBeLessThanOrEqual(width);

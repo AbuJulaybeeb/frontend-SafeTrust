@@ -1,4 +1,10 @@
-import { test, expect, expectHealthyPage, waitForHydration } from "./fixtures";
+import {
+  test,
+  expect,
+  expectHealthyPage,
+  waitForHydration,
+  expectPathname,
+} from "./fixtures";
 import {
   MOCK_USERS,
   mockFirebaseAuth,
@@ -114,7 +120,8 @@ test.describe("Email auth journey (mocked Firebase Auth)", () => {
     await page.goto("/login?redirect=/dashboard/hotels");
     await submitLogin(page, MOCK_USERS.host.email, MOCK_USERS.host.password);
 
-    await expect(page).toHaveURL(/\/dashboard\/hotels/);
+    // `/login?redirect=/dashboard/hotels` already contains the target path.
+    await expectPathname(page, "/dashboard/hotels");
     await expect(
       page.getByRole("heading", { name: "Hotels", level: 1 }),
     ).toBeVisible();
@@ -129,7 +136,8 @@ test.describe("Email auth journey (mocked Firebase Auth)", () => {
   }) => {
     await page.goto("/login?redirect=/dashboard/escrow-dashboard");
     await submitLogin(page, MOCK_USERS.guest.email, MOCK_USERS.guest.password);
-    await expect(page).toHaveURL(DASHBOARD);
+    // `/login?redirect=/dashboard/escrow-dashboard` would also match DASHBOARD.
+    await expectPathname(page, "/dashboard/escrow-dashboard");
 
     // Target specifically the first currently visible "Log out" button
     const logout = page
@@ -138,15 +146,13 @@ test.describe("Email auth journey (mocked Firebase Auth)", () => {
       .first();
 
     if (isMobile) {
-      // The sidebar is a drawer on mobile. Retry the toggle until it opens,
-      // in case the first tap lands before the dashboard has hydrated.
+      // The sidebar is an off-canvas drawer on mobile. Playwright still
+      // counts the closed drawer (-translate-x-full) as "visible", so open it
+      // and wait until Log out is actually on screen.
       const menu = page.getByRole("button", { name: "Toggle navigation menu" });
-      await expect(async () => {
-        if (!(await logout.isVisible())) {
-          await menu.click();
-        }
-        await expect(logout).toBeVisible({ timeout: 2000 });
-      }).toPass();
+      await waitForHydration(menu);
+      await menu.click();
+      await expect(logout).toBeInViewport();
     }
 
     await logout.click();

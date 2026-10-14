@@ -154,4 +154,18 @@ export async function waitForHydration(
     .toBe(true);
 }
 
+/**
+ * Waits until the page's pathname is exactly `pathname`.
+ *
+ * Prefer this over `toHaveURL(/\/dashboard\/x$/)` after a login: the login
+ * page's own URL (`/login?redirect=/dashboard/x`) also ends with the target,
+ * so a loose regex passes before the redirect has happened.
+ */
+export async function expectPathname(
+  page: import("@playwright/test").Page,
+  pathname: string,
+) {
+  await expect.poll(() => new URL(page.url()).pathname).toBe(pathname);
+}
+
 export { expect };
