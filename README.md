@@ -21,7 +21,7 @@
 
 SafeTrust is a decentralized P2P escrow platform for rental transactions. Funds are held in tamper-proof smart contracts on the **Stellar network** via the **[TrustlessWork API](https://docs.trustlesswork.com)** — no intermediaries, full on-chain transparency.
 
-> 🧩 **This repo runs standalone.** You do not need to clone or run `backend-SafeTrust` locally. The frontend connects directly to a remote Hasura GraphQL endpoint and Firebase over the network.
+> 🧩 **This repo runs standalone.** You do not need to clone or run `backend-SafeTrust` locally. Browse and dashboard UI development uses mock data; no Hasura or Docker setup is required. Real sign-in uses Firebase, and blockchain actions require wallet and TrustlessWork configuration.
 
 ---
 
@@ -35,13 +35,18 @@ SafeTrust is a decentralized P2P escrow platform for rental transactions. Funds 
 | npm              | 10.9.2                                         |
 | A Stellar wallet | [Freighter](https://freighter.app) recommended |
 
+npm is the only supported package manager. `.nvmrc` selects Node 22; `package.json`
+pins npm 10.9.2 and supports Node ≥20.18 and <23. With Node installed, use
+`npm install --global npm@10.9.2` if your npm version differs.
+
 ### 1. Clone and install
 
 ```bash
 git clone https://github.com/<your_user>/frontend-SafeTrust
 cd frontend-SafeTrust
 git remote add upstream https://github.com/safetrustcr/frontend-SafeTrust
-npm install
+nvm use
+npm ci
 ```
 
 ### 2. Set up environment variables
@@ -178,7 +183,7 @@ Always use `testnet` for local development. Full guide: [docs.trustlesswork.com 
 
 | Setup                                                                       | When to use                                                      |
 | --------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **This repo standalone** — `npm run dev`, remote Hasura + Firebase          | UI work, components, dashboard features — most contributor tasks |
+| **This repo standalone** — `npm run dev`, mock data                         | UI work, components, dashboard features — most contributor tasks |
 | **`dApp-SafeTrust` monorepo** — frontend + backend together                 | Full-stack work touching schema, mutations, or webhook behavior  |
 | **`backend-SafeTrust` standalone** — Hasura + Postgres + webhook via Docker | Backend-only contributors who don't need the UI                  |
 
@@ -190,7 +195,6 @@ For detailed architectural layers, module boundaries, and ESLint import rules, s
 
 - **Frontend:** TypeScript, Next.js 15, Tailwind CSS
 - **Auth:** Firebase Authentication
-- **GraphQL:** Apollo Client 4, Hasura GraphQL Engine
 - **Blockchain:** Stellar, TrustlessWork API
 - **Wallets:** Freighter, Albedo, LOBSTR
 
@@ -201,16 +205,44 @@ For detailed architectural layers, module boundaries, and ESLint import rules, s
 ```bash
 npm test              # unit and integration tests (Jest)
 npm run test:ci       # CI test run with coverage
-npm run test:e2e      # Playwright E2E smoke tests with Firebase Auth emulator
+npm run test:e2e      # Playwright E2E tests with mocked Firebase requests
 npm run test:e2e:ui   # Playwright interactive UI mode
 npm run typecheck     # TypeScript validation
 npm run lint          # ESLint
 npm run knip          # Dead code and unused dependency analysis
-npm run check         # lint, typecheck, tests, and production build
+npm run check         # zero-warning lint, typecheck, coverage, Knip, build
 ```
 
-Playwright smoke tests live in `e2e/` and validate key MVP user journeys on mobile (390px) and desktop (1280px) viewports with axe-core accessibility and layout overflow checks.
-npm is the supported package manager; the repository pins its expected Node and npm versions in `.nvmrc` and `package.json`.
+### Scripts
+
+| Script         | Purpose                                                           |
+| -------------- | ----------------------------------------------------------------- |
+| `dev`          | Start the Next.js development server                              |
+| `dev:turbo`    | Start development with Turbopack                                  |
+| `build`        | Create the production build                                       |
+| `start`        | Serve the existing production build                               |
+| `lint`         | Run ESLint with caching and zero warnings                         |
+| `lint:fix`     | Apply ESLint fixes                                                |
+| `typecheck`    | Validate TypeScript without emitting files                        |
+| `test`         | Run Jest tests                                                    |
+| `test:ci`      | Run Jest with coverage in CI mode                                 |
+| `test:e2e`     | Run Playwright on mobile and desktop                              |
+| `e2e:test`     | Alias for `test:e2e`                                              |
+| `test:e2e:ui`  | Open the Playwright test UI                                       |
+| `format`       | Format repository files with Prettier                             |
+| `format:check` | Check Prettier formatting                                         |
+| `knip`         | Find dead code and unused dependencies                            |
+| `check`        | Run the CI quality checks: lint, typecheck, coverage, Knip, build |
+| `prepare`      | Install Husky hooks automatically after dependency installation   |
+
+Playwright specs live in `e2e/`. Install Chromium once with
+`npx playwright install --with-deps chromium`. Tests build and start their own
+production server with demo configuration, mock Firebase requests, and check
+mobile/desktop layouts and accessibility. CI runs them in a separate E2E job;
+`npm run check` runs the quality job's checks and does not launch browsers.
+
+Husky runs lint-staged on staged files before each commit and commitlint on the
+commit message. Use Conventional Commits, for example `chore: update tooling`.
 
 ---
 
