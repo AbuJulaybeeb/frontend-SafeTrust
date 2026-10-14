@@ -47,7 +47,7 @@ const ERROR_MESSAGES: Record<string, string> = {
  * not to the whole app.
  */
 function LoginForm() {
-  const { address, token } = useGlobalAuthenticationStore();
+  const { token } = useGlobalAuthenticationStore();
   const walletLoginRedirect = useRef(false);
 
   const router = useRouter();
@@ -71,14 +71,14 @@ function LoginForm() {
   const isAnyAuthLoading = !hydrated || isLoading || isGoogleLoading;
 
   useEffect(() => {
-    if ((address || token) && pathname === "/login") {
+    if (token && pathname === "/login") {
       if (walletLoginRedirect.current) {
         walletLoginRedirect.current = false;
         return;
       }
       router.push(getSafeRedirect());
     }
-  }, [address, token, router, pathname, getSafeRedirect]);
+  }, [token, router, pathname, getSafeRedirect]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

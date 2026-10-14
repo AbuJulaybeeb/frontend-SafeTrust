@@ -12,7 +12,7 @@
  *  5. An error after the signed transaction was handed to the network is
  *     "uncertain", never "failed": it is resolved by polling the indexer.
  */
-import { StrKey } from "stellar-sdk";
+import { StrKey } from "@stellar/stellar-sdk";
 import { format, parseISO } from "date-fns";
 import type { InitializeSingleReleaseEscrowPayload } from "@trustless-work/escrow/types";
 import {

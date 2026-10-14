@@ -8,6 +8,7 @@
  * Next.js can inline them at build time.
  */
 import type { baseURL } from "@trustless-work/escrow";
+import { STELLAR_NETWORK_NAME } from "@/lib/stellar/network";
 import { trustlines } from "@/components/tw-blocks/wallet-kit/trustlines";
 
 const parseNumber = (raw: string | undefined, fallback: number): number => {
@@ -40,8 +41,8 @@ export const getPlatformWalletAddress = (): string =>
 export const getDisputeResolverAddress = (): string =>
   process.env.NEXT_PUBLIC_DISPUTE_RESOLVER_ADDRESS?.trim() ?? "";
 
-/** The wallet kit is pinned to testnet (see auth/wallet/constants/wallet-kit.constant.ts). */
-export const STELLAR_NETWORK: "testnet" | "mainnet" = "testnet";
+/** Shared with the canonical wallet kit. */
+export const STELLAR_NETWORK = STELLAR_NETWORK_NAME;
 
 /**
  * Trustless Work API for STELLAR_NETWORK (the SDK's `baseURL` values).

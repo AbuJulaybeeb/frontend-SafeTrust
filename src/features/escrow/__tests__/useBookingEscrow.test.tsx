@@ -510,7 +510,7 @@ describe("safety guards", () => {
       state: { step: "failed", at: "deploy", reason: "rejected" },
     });
     sessionStorage.setItem(activeBookingKey("1"), "booking-w");
-    const { Keypair } = require("stellar-sdk");
+    const { Keypair } = require("@stellar/stellar-sdk");
     const { result } = renderFlow({
       guestAddress: Keypair.random().publicKey(),
     });

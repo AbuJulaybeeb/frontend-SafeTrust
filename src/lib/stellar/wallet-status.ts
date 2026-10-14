@@ -2,8 +2,9 @@ import type { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { WalletNetwork } from "@creit.tech/stellar-wallets-kit/types";
 import { FREIGHTER_ID } from "@/lib/stellar/wallet-ids";
 import { ALBEDO_ID } from "@/lib/stellar/wallet-ids";
-import { getNetworkDetails, isAllowed } from "@stellar/freighter-api";
-import { kit } from "@/components/auth/wallet/constants/wallet-kit.constant";
+import { getNetworkDetails, isAllowed } from "@/lib/stellar/freighter-status";
+import { kit } from "@/lib/stellar/wallet-kit";
+import { STELLAR_NETWORK } from "./network";
 
 export type WalletReadiness =
   | { state: "ready" }
@@ -20,8 +21,8 @@ export interface WalletWithReadiness {
 
 // The kit's own `network` option isn't readable back out, so the expected
 // passphrase is pinned to the same network the kit is constructed with
-// (see components/auth/wallet/constants/wallet-kit.constant.ts).
-const EXPECTED_NETWORK_PASSPHRASE: string = WalletNetwork.TESTNET;
+// (see lib/stellar/network.ts).
+const EXPECTED_NETWORK_PASSPHRASE: string = STELLAR_NETWORK;
 
 const isMobileUserAgent = (): boolean =>
   typeof navigator !== "undefined" &&

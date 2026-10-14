@@ -28,7 +28,11 @@ jest.mock("@creit.tech/stellar-wallets-kit", () => {
     __constructed: constructed,
     StellarWalletsKit: FakeKit,
     WalletNetwork: { TESTNET: "TESTNET" },
-    allowAllModules: () => [],
+    allowAllModules: () => [
+      { productId: "freighter", productName: "Freighter" },
+      { productId: "xbull", productName: "xBull" },
+      { productId: "lobstr", productName: "LOBSTR" },
+    ],
     FREIGHTER_ID: "freighter",
     XBULL_ID: "xbull",
     FreighterModule: jest.fn(),
@@ -36,7 +40,7 @@ jest.mock("@creit.tech/stellar-wallets-kit", () => {
   };
 });
 
-import { kit as authKit } from "@/components/auth/wallet/constants/wallet-kit.constant";
+import { kit as authKit } from "@/lib/stellar/wallet-kit";
 import { kit as escrowKit, signTransaction } from "../wallet-kit";
 
 const constructed = (
@@ -72,4 +76,21 @@ it("deduplicates concurrent loads and survives module replacement", async () => 
   const reloaded = await import("../wallet-kit");
   expect(await reloaded.getKit()).toBe(first);
   expect(constructed).toHaveBeenCalledTimes(1);
+});
+
+it.each([
+  ["xbull", "xBull"],
+  ["lobstr", "LOBSTR"],
+])("restores %s as the signer after a browser refresh", async (id, name) => {
+  const { useGlobalAuthenticationStore } = await import("@/core/store/data");
+  const { getKit, signTransaction } = await import("../wallet-kit");
+  await useGlobalAuthenticationStore
+    .getState()
+    .connectWalletStore("GRESTORED", name, id);
+  delete (window as Window & { safeTrustWalletKit?: unknown })
+    .safeTrustWalletKit;
+  await expect(
+    signTransaction({ unsignedTransaction: "XDR", address: "GRESTORED" }),
+  ).resolves.toBe(`XDR|signed-by:${id}|TESTNET`);
+  expect(await getKit()).toBeDefined();
 });

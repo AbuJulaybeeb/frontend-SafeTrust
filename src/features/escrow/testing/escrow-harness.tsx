@@ -15,7 +15,7 @@ import {
   Networks,
   Operation,
   TransactionBuilder,
-} from "stellar-sdk";
+} from "@stellar/stellar-sdk";
 import type { BookingDetails } from "../booking-escrow.machine";
 import { computeBookingPrice } from "../pricing";
 

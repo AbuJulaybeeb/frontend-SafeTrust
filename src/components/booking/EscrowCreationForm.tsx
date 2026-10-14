@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { useWallet } from "@/components/auth/wallet/hooks/wallet.hook";
+import { useWallet } from "@/hooks/useWallet";
+import { WalletConnectionCancelledError } from "@/lib/stellar/wallet-kit";
+import { toast } from "sonner";
 import { useBookingEscrow } from "@/hooks/useBookingEscrow";
 import {
   BookingData,
@@ -320,7 +322,15 @@ export function EscrowCreationForm({
   onCancel,
   className = "",
 }: EscrowCreationFormProps) {
-  const { address: walletAddress, connectWallet } = useWallet();
+  const { address: walletAddress, connect } = useWallet();
+  const connectWallet = () => {
+    void connect().catch((error: unknown) => {
+      if (!(error instanceof WalletConnectionCancelledError))
+        toast.error(
+          error instanceof Error ? error.message : "Unable to connect wallet",
+        );
+    });
+  };
   const { selectedEscrow, clearEscrow } = useEscrowContext();
   const [showForm, setShowForm] = useState(false);
   const reportedContractId = useRef<string | null>(null);

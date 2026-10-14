@@ -4,7 +4,9 @@
  * keep what the user typed.
  */
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { Keypair } from "stellar-sdk";
+import { Keypair } from "@stellar/stellar-sdk";
+import { WalletProvider } from "@/components/tw-blocks/wallet-kit/WalletProvider";
+import { useGlobalAuthenticationStore } from "@/core/store/data";
 import { useInitializeEscrow as useSingleRelease } from "../single-release/initialize-escrow/form/useInitializeEscrow";
 import { useInitializeEscrow as useMultiRelease } from "../multi-release/initialize-escrow/form/useInitializeEscrow";
 
@@ -16,9 +18,6 @@ jest.mock("@/components/tw-blocks/tanstack/useEscrowsMutations", () => ({
     deployEscrow: { mutateAsync: mockMutateAsync },
   }),
 }));
-jest.mock("@/components/tw-blocks/wallet-kit/WalletProvider", () => ({
-  useWalletContext: () => ({ walletAddress: mockWallet }),
-}));
 jest.mock("@/components/tw-blocks/providers/EscrowProvider", () => ({
   useEscrowContext: () => ({ setSelectedEscrow: jest.fn() }),
 }));
@@ -26,7 +25,13 @@ jest.mock("sonner", () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));
 
-beforeEach(() => mockMutateAsync.mockReset());
+beforeEach(async () => {
+  mockMutateAsync.mockReset();
+  useGlobalAuthenticationStore.getState().clearAuth();
+  await useGlobalAuthenticationStore
+    .getState()
+    .connectWalletStore(mockWallet, "xBull", "xbull");
+});
 
 /** The part of both hooks this test drives (their form types differ). */
 type InitializeEscrowHook = () => {
@@ -41,7 +46,7 @@ describe.each<[string, InitializeEscrowHook]>([
   ["multi-release", useMultiRelease as unknown as InitializeEscrowHook],
 ])("%s initialize-escrow form", (_type, useHook) => {
   async function submitFilledForm() {
-    const { result } = renderHook(() => useHook());
+    const { result } = renderHook(() => useHook(), { wrapper: WalletProvider });
     act(() => result.current.fillTemplateForm());
     await waitFor(() =>
       expect(result.current.form.getValues("engagementId")).toBe("ENG-001"),

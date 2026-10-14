@@ -8,7 +8,7 @@ import {
   WalletNetwork,
   type ISupportedWallet,
 } from "@creit.tech/stellar-wallets-kit";
-import { getNetworkDetails, isAllowed } from "@stellar/freighter-api";
+import { getNetworkDetails, isAllowed } from "@/lib/stellar/freighter-status";
 
 // The installed @creit.tech/stellar-wallets-kit build is ESM-only, which
 // Jest's default CJS transform can't parse from node_modules. Mocking it
@@ -25,17 +25,17 @@ jest.mock("@creit.tech/stellar-wallets-kit", () => ({
   },
 }));
 
-jest.mock("@stellar/freighter-api", () => ({
+jest.mock("@/lib/stellar/freighter-status", () => ({
   isAllowed: jest.fn(),
   getNetworkDetails: jest.fn(),
 }));
 
-jest.mock("@/components/auth/wallet/constants/wallet-kit.constant", () => ({
+jest.mock("@/lib/stellar/wallet-kit", () => ({
   kit: { getSupportedWallets: jest.fn() },
 }));
 
 import { getWalletReadiness, listWalletsWithReadiness } from "./wallet-status";
-import { kit } from "@/components/auth/wallet/constants/wallet-kit.constant";
+import { kit } from "@/lib/stellar/wallet-kit";
 
 const mockIsAllowed = isAllowed as jest.MockedFunction<typeof isAllowed>;
 const mockGetNetworkDetails = getNetworkDetails as jest.MockedFunction<

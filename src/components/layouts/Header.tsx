@@ -9,6 +9,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { SearchHeader } from "@/components/layouts/SearchHeader";
+import { useWallet } from "@/hooks/useWallet";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface HeaderProps {
@@ -17,6 +18,7 @@ interface HeaderProps {
 
 export const Header = ({ onMenuClick }: HeaderProps) => {
   const router = useRouter();
+  const { address: connectedAddress } = useWallet();
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [signedIn, setSignedIn] = useState(false);
 
@@ -117,6 +119,16 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
               >
                 <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200">
                   {displayName ?? "Account"}
+                  {connectedAddress && (
+                    <span
+                      data-testid="header-wallet-address"
+                      title={connectedAddress}
+                      className="block text-xs font-mono text-muted-foreground"
+                    >
+                      {connectedAddress.slice(0, 6)}…
+                      {connectedAddress.slice(-4)}
+                    </span>
+                  )}
                 </span>
                 <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-950/60 flex items-center justify-center shrink-0">
                   <span className="text-xs font-semibold text-orange-800 dark:text-orange-200">

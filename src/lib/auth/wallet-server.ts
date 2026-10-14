@@ -1,8 +1,12 @@
 import { createHash } from "node:crypto";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import { getFirestore, Timestamp, type Transaction } from "firebase-admin/firestore";
-import { Horizon, Keypair, Networks, WebAuth } from "stellar-sdk";
+import {
+  getFirestore,
+  Timestamp,
+  type Transaction,
+} from "firebase-admin/firestore";
+import { Horizon, Keypair, Networks, WebAuth } from "@stellar/stellar-sdk";
 
 const CHALLENGE_COLLECTION = "stellarWalletChallenges";
 const CHALLENGE_TTL_SECONDS = 5 * 60;
@@ -276,20 +280,22 @@ export async function verifyWalletChallenge(transaction: string) {
   }
 
   try {
-    const consumed = await firestore.runTransaction(async (dbTransaction: Transaction) => {
-      const currentChallenge = await dbTransaction.get(challengeRef);
-      const currentRecord = currentChallenge.data();
-      if (
-        !currentChallenge.exists ||
-        currentRecord?.account !== challenge.clientAccountID ||
-        !(currentRecord.expiresAt instanceof Timestamp) ||
-        currentRecord.expiresAt.toMillis() <= Date.now()
-      ) {
-        return false;
-      }
-      dbTransaction.delete(challengeRef);
-      return true;
-    });
+    const consumed = await firestore.runTransaction(
+      async (dbTransaction: Transaction) => {
+        const currentChallenge = await dbTransaction.get(challengeRef);
+        const currentRecord = currentChallenge.data();
+        if (
+          !currentChallenge.exists ||
+          currentRecord?.account !== challenge.clientAccountID ||
+          !(currentRecord.expiresAt instanceof Timestamp) ||
+          currentRecord.expiresAt.toMillis() <= Date.now()
+        ) {
+          return false;
+        }
+        dbTransaction.delete(challengeRef);
+        return true;
+      },
+    );
 
     if (!consumed) {
       throw new WalletAuthServiceError(

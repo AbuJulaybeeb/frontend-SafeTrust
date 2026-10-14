@@ -131,11 +131,19 @@ describe("session helper", () => {
       );
 
       // Simulate user sign-out
+      await useGlobalAuthenticationStore
+        .getState()
+        .connectWalletStore("GCONNECTED", "xBull", "xbull");
       await listenerCallback(null);
       expect(Cookies.remove).toHaveBeenCalledWith(SESSION_COOKIE_NAME, {
         path: "/",
       });
       expect(useGlobalAuthenticationStore.getState().token).toBe("");
+      // A listener clearing authentication must not erase persisted connection hints.
+      expect(useGlobalAuthenticationStore.getState().address).toBe(
+        "GCONNECTED",
+      );
+      expect(useGlobalAuthenticationStore.getState().walletId).toBe("xbull");
 
       unsubscribe();
       expect(mockUnsubscribe).toHaveBeenCalledTimes(1);

@@ -10,7 +10,7 @@ import {
   Networks,
   TransactionBuilder,
   WebAuth,
-} from "stellar-sdk";
+} from "@stellar/stellar-sdk";
 import {
   hasTrustedWalletAuthOrigin,
   issueWalletChallenge,
@@ -28,9 +28,10 @@ jest.mock("firebase-admin/firestore", () => {
   const firestore = jest.requireActual("firebase-admin/firestore");
   return { ...firestore, getFirestore: jest.fn() };
 });
-jest.mock("stellar-sdk", () => {
-  const stellarSdk =
-    jest.requireActual<typeof import("stellar-sdk")>("stellar-sdk");
+jest.mock("@stellar/stellar-sdk", () => {
+  const stellarSdk = jest.requireActual<typeof import("@stellar/stellar-sdk")>(
+    "@stellar/stellar-sdk",
+  );
   return {
     ...stellarSdk,
     Horizon: {
@@ -193,9 +194,11 @@ describe("SEP-10 wallet authentication service", () => {
   });
 
   it("rejects an invalid Stellar account when issuing a challenge", async () => {
-    await expect(issueWalletChallenge("invalid-account")).rejects.toMatchObject({
-      status: 400,
-    });
+    await expect(issueWalletChallenge("invalid-account")).rejects.toMatchObject(
+      {
+        status: 400,
+      },
+    );
   });
 
   it("rejects a challenge signed by a different key (wrong signer)", async () => {

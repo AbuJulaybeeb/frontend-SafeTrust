@@ -36,8 +36,11 @@ jest.mock(
 jest.mock("@/components/tw-blocks/wallet-kit/wallet-kit", () =>
   require("../testing/escrow-harness").walletKitModule(),
 );
-jest.mock("@/components/auth/wallet/hooks/wallet.hook", () => ({
-  useWallet: () => ({ handleConnect: jest.fn() }),
+jest.mock("@/hooks/useWallet", () => ({
+  useWallet: () => ({
+    address: require("../testing/escrow-harness").GUEST,
+    connect: jest.fn(),
+  }),
 }));
 jest.mock("@/core/store/data", () => ({
   useGlobalAuthenticationStore: () => ({

@@ -6,15 +6,16 @@ import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { clearSessionCookie } from "@/lib/auth/session";
-import { kit } from "@/components/auth/wallet/constants/wallet-kit.constant";
+import { useWallet } from "@/hooks/useWallet";
 import { useGlobalAuthenticationStore } from "@/core/store/data";
 
 export function LogoutButton() {
   const router = useRouter();
+  const { disconnect } = useWallet();
   const clearAuth = useGlobalAuthenticationStore((state) => state.clearAuth);
   const handleLogout = async () => {
     try {
-      await kit.disconnect();
+      await disconnect();
     } catch (error) {
       console.error("Error disconnecting wallet during logout:", error);
     }

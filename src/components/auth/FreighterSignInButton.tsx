@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { FREIGHTER_ID } from "@/lib/stellar/wallet-ids";
-import { isConnected } from "@stellar/freighter-api";
+import { isConnected } from "@/lib/stellar/freighter-status";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { getWalletKit } from "@/lib/stellar/wallet-kit";
-import { signInWithFreighter, WalletAuthError } from "@/lib/auth/wallet";
+import { WalletConnectionCancelledError } from "@/lib/stellar/wallet-kit";
+import { useWallet } from "@/hooks/useWallet";
+import { WalletAuthError } from "@/lib/auth/wallet";
 
 const FREIGHTER_INSTALL_URL = "https://www.freighter.app";
 
@@ -22,6 +22,7 @@ export default function FreighterSignInButton({
   redirectTo,
 }: FreighterSignInButtonProps) {
   const router = useRouter();
+  const { connect } = useWallet();
   const [isBusy, setIsBusy] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isFreighterAvailable, setIsFreighterAvailable] = useState(true);
@@ -47,7 +48,8 @@ export default function FreighterSignInButton({
     };
   }, []);
 
-  const showWalletError = (error: unknown, walletId: string) => {
+  const showWalletError = (error: unknown, walletId?: string) => {
+    if (error instanceof WalletConnectionCancelledError) return;
     if (!(error instanceof WalletAuthError)) {
       toast.error("Wallet sign-in failed. Please try again.");
       return;
@@ -69,9 +71,13 @@ export default function FreighterSignInButton({
     toast.error(error.message);
   };
 
-  const authenticate = async (walletId: string) => {
+  const authenticate = async (walletId?: string) => {
     try {
-      await signInWithFreighter(walletId);
+      await connect({
+        walletId,
+        authenticate: true,
+        modalTitle: "Choose a Stellar wallet",
+      });
       router.replace(redirectTo);
     } catch (error) {
       showWalletError(error, walletId);
@@ -88,26 +94,11 @@ export default function FreighterSignInButton({
   };
 
   const handleOtherWallets = async () => {
-    let authenticationInProgress = false;
     setIsBusy(true);
     try {
-      await getWalletKit().openModal({
-        modalTitle: "Choose a Stellar wallet",
-        onWalletSelected: async (wallet: ISupportedWallet) => {
-          authenticationInProgress = true;
-          setIsBusy(true);
-          try {
-            await authenticate(wallet.id);
-          } finally {
-            authenticationInProgress = false;
-            setIsBusy(false);
-          }
-        },
-      });
-    } catch {
-      // Closing the wallet picker is a user cancellation.
+      await authenticate();
     } finally {
-      if (!authenticationInProgress) setIsBusy(false);
+      setIsBusy(false);
     }
   };
 

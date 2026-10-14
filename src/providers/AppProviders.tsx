@@ -9,15 +9,9 @@ import { QueryProvider } from "./QueryProvider";
 /**
  * Global providers that are safe to include on every page.
  *
- * WalletProvider has been intentionally removed from here:
- * it pulls in @creit.tech/stellar-wallets-kit (~250 kB) which adds to
- * every route's first-load JS, including public pages like /, /rent and
- * /room that never need a wallet.
- *
- * The wallet kit is now loaded on-demand:
- *  - Auth pages (/login, /register) render WalletProvider themselves.
- *  - Escrow pages (/bookings/**) get it through EscrowProviders.
- *  - Dashboard pages (/dashboard/**) get it from the dashboard layout.
+ * WalletProvider remains scoped to auth, escrow, and dashboard consumers.
+ * It adapts the persisted Zustand wallet store without loading the SDK.
+ * The canonical wallet kit loads only when a wallet operation requests it.
  *
  * See: https://github.com/safetrustcr/frontend-SafeTrust/issues/538
  */

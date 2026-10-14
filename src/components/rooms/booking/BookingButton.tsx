@@ -3,16 +3,17 @@
 import * as React from "react";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
-import { useWallet } from "@/components/auth/wallet/hooks/wallet.hook";
-import { useGlobalAuthenticationStore } from "@/core/store/data";
-import type { ApartmentListing, ApartmentOwner } from "@/types/hotel";
+import { useWallet } from "@/hooks/useWallet";
+import { WalletConnectionCancelledError } from "@/lib/stellar/wallet-kit";
+import { toast } from "sonner";
+import type { ApartmentListing } from "@/types/hotel";
 import { BookingEscrowCheckout } from "@/features/escrow/BookingEscrowCheckout";
 import type { BookingDetails } from "@/features/escrow/booking-escrow.machine";
 import { computeBookingPrice, countNights } from "@/features/escrow/pricing";
 
 /** What the escrow needs to know about the listing being booked. */
 type BookingListing = Pick<ApartmentListing, "id" | "name"> & {
-  owner: Pick<ApartmentOwner, "walletAddress">;
+  owner: { walletAddress?: string };
 };
 
 interface BookingButtonProps {
@@ -45,8 +46,15 @@ const BookingButton: React.FC<BookingButtonProps> = ({
   className,
   disabled = false,
 }) => {
-  const { handleConnect } = useWallet();
-  const { address } = useGlobalAuthenticationStore();
+  const { address, connect } = useWallet();
+  const handleConnect = () => {
+    void connect().catch((error: unknown) => {
+      if (!(error instanceof WalletConnectionCancelledError))
+        toast.error(
+          error instanceof Error ? error.message : "Unable to connect wallet",
+        );
+    });
+  };
 
   const booking = React.useMemo<BookingDetails | null>(() => {
     if (!dateRange?.from || !dateRange?.to) return null;

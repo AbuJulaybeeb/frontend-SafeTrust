@@ -65,7 +65,7 @@ export async function signInWithFreighter(walletId = FREIGHTER_ID) {
   const kit = getWalletKit();
   const supportedWallets = await kit.getSupportedWallets();
   const wallet = supportedWallets.find((item) => item.id === walletId);
-  if (!wallet?.isAvailable) {
+  if (!wallet || (!wallet.isAvailable && !wallet.isPlatformWrapper)) {
     throw new WalletAuthError(
       "NOT_INSTALLED",
       `${wallet?.name ?? "Wallet"} isn't available.`,
@@ -140,7 +140,7 @@ export async function signInWithFreighter(walletId = FREIGHTER_ID) {
   useGlobalAuthenticationStore.getState().setToken(idToken);
   await useGlobalAuthenticationStore
     .getState()
-    .connectWalletStore(address, wallet.name);
+    .connectWalletStore(address, wallet.name, wallet.id);
 
   return address;
 }

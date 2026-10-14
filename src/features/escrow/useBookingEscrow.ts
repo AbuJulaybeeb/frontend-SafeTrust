@@ -10,7 +10,7 @@
  * - There is no automatic retry. The guest decides.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Networks, TransactionBuilder } from "stellar-sdk";
+import { Networks, TransactionBuilder } from "@stellar/stellar-sdk";
 import {
   useGetEscrowsFromIndexerBySigner,
   useUpdateFromTxHash,

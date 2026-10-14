@@ -37,17 +37,27 @@ src/providers/
 components that use Trustless Work escrow features, such as
 `BookingEscrowWrapper` and `HotelMilestoneActions`.
 
-## Auth store (skeleton mode)
+## Auth store
 
-```typescript
-// src/core/store/data/index.ts
-// Pre-seeded with mock values:
-address: "mock-owner-1";
-token: "mock-jwt-token";
-isConnected: true;
-```
+`src/core/store/data/index.ts` owns the single Zustand wallet store. It starts
+with an empty address, name, adapter ID, and token. Wallet metadata (`address`,
+`name`, `walletId`) is persisted under `safetrust-wallet`; tokens, actions,
+identity claims, and roles are never written or restored from that storage.
+The adapter ID lets xBull/LOBSTR remain the selected signer after refresh.
 
-`disconnectWalletStore()` resets to these same values — so the user is never truly logged out in skeleton mode.
+`src/hooks/useWallet.ts` exposes `address`, `name`, `isConnected`, `connect`,
+`disconnect`, and `sign`. The canonical kit is loaded lazily in the browser from
+`src/lib/stellar/wallet-kit.ts` and survives hot reload. Its network comes from
+`NEXT_PUBLIC_TRUSTLESS_NETWORK` (`testnet` by default), shared with escrow API
+and explorer configuration. `signXdr` is the signing boundary; vendored blocks
+use a compatible adapter to it and read the same store through WalletProvider.
+
+Wallet metadata is a connection hint, not authorization. Login uses the
+server-verified SEP-10 challenge and Firebase session; a cached address cannot
+redirect through login or grant dashboard access. The session listener clears
+expired tokens without erasing wallet metadata. Explicit logout clears both.
+Disconnecting a wallet clears its metadata while retaining an independent
+Firebase session.
 
 ## Mutation stubs
 

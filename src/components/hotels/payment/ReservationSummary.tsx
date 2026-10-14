@@ -1,8 +1,9 @@
 "use client";
 
 import type React from "react";
-import { useWallet } from "@/components/auth/wallet/hooks/wallet.hook";
-import { useGlobalAuthenticationStore } from "@/core/store/data";
+import { useWallet } from "@/hooks/useWallet";
+import { WalletConnectionCancelledError } from "@/lib/stellar/wallet-kit";
+import { toast } from "sonner";
 import { BookingEscrowCheckout } from "@/features/escrow/BookingEscrowCheckout";
 import type { BookingDetails } from "@/features/escrow/booking-escrow.machine";
 
@@ -21,8 +22,15 @@ const ReservationSummary: React.FC<ReservationSummaryProps> = ({
   bookingId,
   booking,
 }) => {
-  const { handleConnect } = useWallet();
-  const { address } = useGlobalAuthenticationStore();
+  const { address, connect } = useWallet();
+  const handleConnect = () => {
+    void connect().catch((error: unknown) => {
+      if (!(error instanceof WalletConnectionCancelledError))
+        toast.error(
+          error instanceof Error ? error.message : "Unable to connect wallet",
+        );
+    });
+  };
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6 space-y-6">

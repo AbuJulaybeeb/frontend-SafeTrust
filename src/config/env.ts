@@ -1,4 +1,4 @@
-import { StrKey } from "stellar-sdk";
+import { StrKey } from "@stellar/stellar-sdk";
 import { z } from "zod";
 
 const stellarAddressSchema = z

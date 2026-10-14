@@ -10,6 +10,8 @@ const customJestConfig = {
   testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^@creit[.]tech/stellar-wallets-kit/types$":
+      "<rootDir>/node_modules/@creit.tech/stellar-wallets-kit/types.cjs",
     "^server-only$": "<rootDir>/__mocks__/server-only.js",
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/e2e/"],

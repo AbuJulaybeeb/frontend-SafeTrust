@@ -101,7 +101,11 @@ describe("signInWithFreighter", () => {
     expect(mockSignInWithCustomToken).toHaveBeenCalledWith({}, "custom-token");
     expect(mockSetSessionCookie).toHaveBeenCalledWith("firebase-id-token");
     expect(setToken).toHaveBeenCalledWith("firebase-id-token");
-    expect(connectWalletStore).toHaveBeenCalledWith("GABC", "Freighter");
+    expect(connectWalletStore).toHaveBeenCalledWith(
+      "GABC",
+      "Freighter",
+      "freighter",
+    );
   });
 
   it("rejects an unavailable wallet without requesting a challenge", async () => {

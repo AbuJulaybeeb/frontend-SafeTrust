@@ -39,14 +39,16 @@ export function getSessionCookie(): string | undefined {
 export function initSessionListener(authInstance: Auth = auth): () => void {
   return onIdTokenChanged(authInstance, async (user: User | null) => {
     if (!user) {
-      clearSessionCookie();
+      Cookies.remove(SESSION_COOKIE_NAME, { path: "/" });
+      useGlobalAuthenticationStore.getState().setToken("");
       return;
     }
 
     try {
       setSessionCookie(await user.getIdToken());
     } catch {
-      clearSessionCookie();
+      Cookies.remove(SESSION_COOKIE_NAME, { path: "/" });
+      useGlobalAuthenticationStore.getState().setToken("");
     }
   });
 }
