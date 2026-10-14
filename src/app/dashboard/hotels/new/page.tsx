@@ -61,7 +61,7 @@ export default function NewHotelPage() {
     "bg-white dark:bg-slate-900 px-4 py-2.5 text-sm",
     "text-gray-900 dark:text-white",
     "placeholder:text-gray-400 dark:placeholder:text-gray-500",
-    "focus:outline-none focus:ring-2 focus:ring-orange-500",
+    "focus:outline-none focus:ring-2 focus:ring-sky-500",
     "transition-colors",
   );
 
@@ -266,9 +266,9 @@ export default function NewHotelPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-lg bg-orange-500
-                       hover:bg-orange-600 active:bg-orange-700
-                       text-white text-sm font-semibold
+              className="px-6 py-2.5 rounded-lg bg-sky-100
+                       hover:bg-sky-200 active:bg-sky-300
+                       text-sky-900 text-sm font-semibold
                        transition-colors disabled:opacity-60
                        disabled:cursor-not-allowed"
             >
