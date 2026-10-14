@@ -12,6 +12,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 // Firebase imports per Issue #313
 import { sendPasswordResetEmail } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 import { auth } from "@/lib/firebase";
 
 export default function ForgotPasswordForm() {
@@ -51,7 +52,7 @@ export default function ForgotPasswordForm() {
       setMessage("Check your email for reset instructions");
       setEmail(""); // Clear email input on success
     } catch (error: unknown) {
-      const errCode = (error as { code?: string })?.code ?? "";
+      const errCode = error instanceof FirebaseError ? error.code : "unknown";
       console.error("Firebase Reset Error:", errCode);
       setStatus("error");
 

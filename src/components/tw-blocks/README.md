@@ -18,6 +18,11 @@ form variant that is not rendered by the product.
 
 ## Local modifications
 
+- Multi-release `ApproveMilestone` and `ChangeMilestoneStatus` pass the confirmed
+  `SendTransactionResponse` plus optional `customMetadata` to `onSuccess`. Their
+  exported success types replace arbitrary generics and unsafe callback casts;
+  callbacks run only after the mutation succeeds.
+
 - `wallet-kit/wallet-kit.ts` adapts `signTransaction` to the canonical
   `src/lib/stellar/wallet-kit.ts` / `signXdr`. There is one lazy browser kit,
   using all supported adapters and the configured Stellar network.
@@ -25,7 +30,8 @@ form variant that is not rendered by the product.
   It retains the upstream context shape without separate state or storage keys.
   The old vendored `useWallet.ts` is replaced by `src/hooks/useWallet.ts`.
 - Both initialize-escrow hooks resolve the signer from the form approver or the
-  shared wallet context, with no localStorage fallbacks. Existing trustline,
+  shared wallet context, with no localStorage fallbacks. Trustline issuers use
+  the inferred option type without assertions. Existing trustline,
   receiver-role, and payload normalization edits are retained.
 - Both `initialize-escrow/form/useInitializeEscrow.ts` hooks call `form.reset()`
   only after a successful deploy (upstream resets in `finally`, which wiped the

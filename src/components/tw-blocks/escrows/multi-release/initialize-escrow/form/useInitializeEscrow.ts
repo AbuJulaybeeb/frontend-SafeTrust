@@ -129,9 +129,7 @@ export function useInitializeEscrow() {
       const selectedTrustline = trustlineOptions.find(
         (t) => t.value === payload.trustline?.address,
       );
-      const trustlineIssuer = (
-        selectedTrustline as { issuer?: string } | undefined
-      )?.issuer;
+      const trustlineIssuer = selectedTrustline?.issuer;
 
       // If the address is a Soroban contract (starts with C), use the issuer instead
       // The API may not accept Soroban contract addresses directly
