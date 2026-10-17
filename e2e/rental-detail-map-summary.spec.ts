@@ -124,6 +124,17 @@ test.describe("Rental detail — Where you'll stay map and sticky booking bar", 
 
       expect(summaryBox).not.toBeNull();
       expect(whereBox).not.toBeNull();
+
+      // Verify that the sticky bar does not overlap the "Where you'll stay" heading
+      const whereBottom = whereBox!.y + whereBox!.height;
+      expect(whereBottom).toBeLessThanOrEqual(summaryBox!.y);
+
+      // Verify that the last content element above the bar is also not obscured
+      const showMapBtn = page.getByRole("button", { name: "Show map" });
+      const showMapBox = await showMapBtn.boundingBox();
+      expect(showMapBox).not.toBeNull();
+      const lastContentBottom = showMapBox!.y + showMapBox!.height;
+      expect(lastContentBottom).toBeLessThanOrEqual(summaryBox!.y);
     });
   }
 });

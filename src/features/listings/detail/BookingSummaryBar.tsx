@@ -66,10 +66,7 @@ export function BookingSummaryBar({
   const [localDates, setLocalDates] = useState<{
     checkIn?: string;
     checkOut?: string;
-  }>({
-    checkIn: initialIntent?.checkIn,
-    checkOut: initialIntent?.checkOut,
-  });
+  }>({});
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(
@@ -90,7 +87,8 @@ export function BookingSummaryBar({
   const guestsCount = initialIntent?.adults ?? initialIntent?.guests ?? 1;
 
   const hasExactDates = Boolean(
-    effectiveCheckIn && effectiveCheckOut && !initialIntent?.isFlexible,
+    (effectiveCheckIn && effectiveCheckOut && !initialIntent?.isFlexible) ||
+    (localDates?.checkIn && localDates?.checkOut),
   );
 
   const { intentSummary, bookLabel } = useMemo(() => {
