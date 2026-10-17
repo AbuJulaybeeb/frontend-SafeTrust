@@ -17,11 +17,11 @@ const SUPPORTERS: Supporter[] = [
     href: "https://stellar.org",
     light: "/img/brands/stellar-mark-black.svg",
     dark: "/img/brands/stellar-mark-white.svg",
-    width: 32,
-    height: 27,
+    width: 24,
+    height: 24,
   },
   {
-    name: "Trustless Work API",
+    name: "Trustless Work",
     href: "https://www.trustlesswork.com",
     light: "/img/brands/trustless-work-light.svg",
     dark: "/img/brands/trustless-work-dark.svg",
@@ -33,8 +33,8 @@ const SUPPORTERS: Supporter[] = [
     href: "https://www.drips.network",
     light: "/img/brands/drips-light.svg",
     dark: "/img/brands/drips-dark.svg",
-    width: 120,
-    height: 32,
+    width: 160,
+    height: 48,
   },
 ];
 

@@ -113,51 +113,51 @@ html [data-sonner-toaster][data-sonner-theme="light"] {
 
 @layer components {
   /* One selector list: the home strip (.scrollbar-soft) and the home page's own scrollbar */
-  /* Firefox (and other browsers without ::-webkit-scrollbar): standard properties */
-  @supports not selector(::-webkit-scrollbar) {
-    .scrollbar-soft,
-    :root:has(main.home-page) {
-      scrollbar-width: thin;
-      scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+  /* Standard CSS scrollbars (Firefox and browsers supporting CSS scrollbars) */
+  .scrollbar-soft,
+  :root:has(main.home-page) {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+  }
+
+  /* Chromium / Safari (WebKit pseudo-elements, disabled in forced-colors mode to preserve native system scrollbars) */
+  @media (forced-colors: none) {
+    .scrollbar-soft::-webkit-scrollbar,
+    :root:has(main.home-page)::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
     }
-  }
 
-  /* Chromium / Safari */
-  .scrollbar-soft::-webkit-scrollbar,
-  :root:has(main.home-page)::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
+    .scrollbar-soft::-webkit-scrollbar-track,
+    :root:has(main.home-page)::-webkit-scrollbar-track {
+      background: hsl(var(--scrollbar-track));
+      border-radius: 9999px;
+    }
 
-  .scrollbar-soft::-webkit-scrollbar-track,
-  :root:has(main.home-page)::-webkit-scrollbar-track {
-    background: hsl(var(--scrollbar-track));
-    border-radius: 9999px;
-  }
+    .scrollbar-soft::-webkit-scrollbar-thumb {
+      background: linear-gradient(
+        90deg,
+        hsl(var(--scrollbar-thumb)),
+        hsl(var(--scrollbar-thumb-hover))
+      );
+      border: 2px solid hsl(var(--scrollbar-track)); /* slim look, still a 10 px drag target */
+      border-radius: 9999px;
+    }
 
-  .scrollbar-soft::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--scrollbar-thumb)),
-      hsl(var(--scrollbar-thumb-hover))
-    );
-    border: 2px solid hsl(var(--scrollbar-track)); /* slim look, still a 10 px drag target */
-    border-radius: 9999px;
-  }
+    :root:has(main.home-page)::-webkit-scrollbar-thumb {
+      background: linear-gradient(
+        180deg,
+        hsl(var(--scrollbar-thumb)),
+        hsl(var(--scrollbar-thumb-hover))
+      );
+      border: 2px solid hsl(var(--scrollbar-track));
+      border-radius: 9999px;
+    }
 
-  :root:has(main.home-page)::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      180deg,
-      hsl(var(--scrollbar-thumb)),
-      hsl(var(--scrollbar-thumb-hover))
-    );
-    border: 2px solid hsl(var(--scrollbar-track));
-    border-radius: 9999px;
-  }
-
-  .scrollbar-soft::-webkit-scrollbar-thumb:hover,
-  :root:has(main.home-page)::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--scrollbar-thumb-hover));
+    .scrollbar-soft::-webkit-scrollbar-thumb:hover,
+    :root:has(main.home-page)::-webkit-scrollbar-thumb:hover {
+      background: hsl(var(--scrollbar-thumb-hover));
+    }
   }
 
   /* Windows high contrast: give control back to the system */
