@@ -236,12 +236,6 @@ const eslintConfig = [
     },
   },
   {
-    files: ["**/*.test.{ts,tsx}"],
-    rules: {
-      "no-restricted-imports": "off",
-    },
-  },
-  {
     files: ["src/hooks/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [
@@ -294,6 +288,12 @@ const eslintConfig = [
           ],
         },
       ],
+    },
+  },
+  {
+    files: ["**/*.test.{ts,tsx}", "src/test/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": "off",
     },
   },
 ];
