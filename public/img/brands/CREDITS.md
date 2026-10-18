@@ -7,8 +7,8 @@ Each file has a light and a dark variant so it reads correctly on both backgroun
 |---|---|---|---|---|---|
 | `stellar-mark-black.svg` | Stellar | https://stellar.org/brand-resources | Stellar brand guidelines (free to use for ecosystem integrations) | viewBox 0 0 24 24 | Supported by, light backgrounds |
 | `stellar-mark-white.svg` | Stellar | https://stellar.org/brand-resources | Stellar brand guidelines (free to use for ecosystem integrations) | viewBox 0 0 24 24 | Supported by, dark backgrounds |
-| `trustless-work-light.svg` | Trustless Work | https://github.com/Trustless-Work | Trustless Work brand usage (approved by the team) | viewBox 0 0 168 32 | Supported by, light backgrounds |
-| `trustless-work-dark.svg` | Trustless Work | https://github.com/Trustless-Work | Trustless Work brand usage (approved by the team) | viewBox 0 0 168 32 | Supported by, dark backgrounds |
+| `trustless-work-light.svg` | Trustless Work | https://github.com/Trustless-Work | Trustless Work brand usage (approved by the team) | viewBox 0 0 240 48 | Supported by, light backgrounds |
+| `trustless-work-dark.svg` | Trustless Work | https://github.com/Trustless-Work | Trustless Work brand usage (approved by the team) | viewBox 0 0 240 48 | Supported by, dark backgrounds |
 | `drips-light.svg` | Drips | https://radworks.org/brand | Radworks brand center (Drips is a Radworks project) | viewBox 0 0 160 48 | Supported by, light backgrounds |
 | `drips-dark.svg` | Drips | https://radworks.org/brand | Radworks brand center (Drips is a Radworks project) | viewBox 0 0 160 48 | Supported by, dark backgrounds |
 
