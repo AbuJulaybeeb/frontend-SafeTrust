@@ -9,6 +9,7 @@ import {
   HomeMotionStep,
 } from "@/components/home/HomeMotion";
 import { HomeSkyline } from "@/components/home/HomeSkyline";
+import { SupportedBy } from "@/components/home/SupportedBy";
 
 export default function Page() {
   return (
